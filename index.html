@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>HM Roofing iOS concepts</title>
 <style>
 :root { --bg:#141816; --panel:#1c211e; --line:#2c342f; --text:#e8ebe6; --muted:#8b948c; --brand:#31463a; --gold:#c9a45c; --pick:#3d5c4a; }
@@ -57,10 +57,59 @@ button:disabled { opacity:.55; cursor:not-allowed; }
 .status { font-size:13px; color:var(--muted); margin:8px 0 0; min-height:1.3em; }
 .status.ok { color:#9bb89a; }
 .status.err { color:#d4a0a0; }
+.hint { display:none; }
+.phones { display:contents; }
+.model-tag { display:none; }
 @media (max-width: 980px) {
-  .models, .row { grid-template-columns: 110px repeat(4, minmax(220px, 68vw)); overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  header, .vote, .summary { padding-left: 16px; padding-right: 16px; }
-  .vote { margin-left: 16px; margin-right: 16px; }
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  header { padding: 12px 16px 12px; padding-top: max(12px, env(safe-area-inset-top)); }
+  h1 { font-size: 18px; }
+  .sub { font-size: 13px; }
+  .hint { display:block; color:var(--gold); font-size:13px; margin:8px 0 0; }
+  .reviewer { max-width:none; width:100%; font-size:16px; padding:12px; min-height:44px; }
+  .models { display:none; }
+  .row { display:block; padding:0; }
+  .stage { padding: 14px 16px 6px; }
+  .phones {
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-padding-left:16px;
+    padding: 4px 16px 12px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .phones .cell {
+    flex: 0 0 min(78vw, 360px);
+    scroll-snap-align:start;
+    padding:10px;
+  }
+  .model-tag {
+    display:block;
+    font-size:12px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .vote { margin: 0 0 20px; padding: 12px 16px 16px; }
+  .vote-top { flex-direction:column; align-items:stretch; gap:12px; }
+  .picks { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:8px; }
+  .picks label { justify-content:center; min-height:44px; font-size:16px; padding:10px 8px; }
+  fieldset:first-child .picks label:last-child { grid-column: 1 / -1; }
+  .vote textarea { font-size:16px; min-height:72px; padding:12px; }
+  .summary {
+    position:sticky;
+    bottom:0;
+    z-index:5;
+    margin:0;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);
+  }
+  .summary pre { display:none; }
+  .summary .actions { margin:8px 0 0; }
+  .summary .actions button { min-height:44px; padding:12px 16px; font-size:16px; flex:1; }
+  button, .picks label { touch-action:manipulation; }
 }
 </style>
 </head>
@@ -68,6 +117,7 @@ button:disabled { opacity:.55; cursor:not-allowed; }
 <header>
   <h1>HM Roofing iOS concepts</h1>
   <p class="sub">Four versions of the same field-sales app. Columns are unlabeled on purpose. On each row, pick a winner and tick anything you liked. Empty cells cannot win that row. A sentence in the note is enough. When you are done, hit Send at the bottom.</p>
+  <p class="hint">Swipe sideways to compare A–D, then vote under the row.</p>
   <div>
     <input class="reviewer" id="reviewer" type="text" placeholder="Your name or initials">
   </div>
@@ -227,6 +277,21 @@ window.HM_MODELS = [{id:'A',label:'Model A',short:'A'}, {id:'B',label:'Model B',
   const KEY = window.HM_VOTE_KEY;
   const MODELS = window.HM_MODELS;
   const CATS = Array.from(document.querySelectorAll("[data-cat]"));
+
+  document.querySelectorAll(".row").forEach((row) => {
+    const cells = Array.from(row.querySelectorAll(".cell"));
+    if (!cells.length) return;
+    const scroller = document.createElement("div");
+    scroller.className = "phones";
+    cells.forEach((cell, i) => {
+      const tag = document.createElement("div");
+      tag.className = "model-tag";
+      tag.textContent = "Model " + (MODELS[i] ? MODELS[i].short : "");
+      cell.insertBefore(tag, cell.firstChild);
+      scroller.appendChild(cell);
+    });
+    row.appendChild(scroller);
+  });
 
   function load() {
     try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
