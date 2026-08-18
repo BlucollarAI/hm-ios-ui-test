@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HM Roofing iOS concepts</title>
+<style>
+:root { --bg:#141816; --panel:#1c211e; --line:#2c342f; --text:#e8ebe6; --muted:#8b948c; --brand:#31463a; --gold:#c9a45c; --pick:#3d5c4a; }
+* { box-sizing: border-box; }
+body { margin:0; font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif; background:var(--bg); color:var(--text); }
+a { color: var(--gold); }
+header { position:sticky; top:0; z-index:4; background:var(--bg); border-bottom:1px solid var(--line); padding:20px 24px 16px; }
+h1 { margin:0 0 6px; font-size:20px; font-weight:650; }
+.sub { color:var(--muted); font-size:13px; line-height:1.45; max-width:860px; }
+nav { margin-top:10px; }
+nav a { margin-right:16px; font-size:13px; }
+.models { display:grid; grid-template-columns:140px repeat(4,minmax(160px,1fr)); gap:12px; padding:12px 24px 0; position:sticky; top:128px; z-index:3; background:var(--bg); }
+.models div { font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); padding-bottom:10px; }
+.models strong { display:block; color:var(--text); font-size:14px; letter-spacing:0; text-transform:none; margin-top:2px; }
+.row { display:grid; grid-template-columns:140px repeat(4,minmax(160px,1fr)); gap:12px; padding:8px 24px 0; }
+.stage { font-size:15px; font-weight:650; padding-top:8px; }
+.stage span { display:block; font-weight:400; color:var(--muted); font-size:12px; margin-top:4px; }
+.cell { background:var(--panel); border:1px solid var(--line); min-height:80px; padding:8px; }
+.cell.empty { display:flex; align-items:center; justify-content:center; color:#5c6560; font-size:12px; }
+.cell.liked { outline:2px solid var(--gold); }
+.cell.winner { outline:2px solid #7d9a86; }
+figure { margin:0 0 10px; } figure:last-child { margin-bottom:0; }
+img { width:100%; height:auto; display:block; background:#000; }
+figcaption { font-size:11px; color:var(--muted); margin-top:6px; }
+.vote { margin:0 24px 28px; padding:12px 14px; background:var(--panel); border:1px solid var(--line); border-top:none; }
+.vote-top { display:flex; flex-wrap:wrap; gap:16px 28px; align-items:center; margin-bottom:8px; }
+.vote fieldset { border:0; margin:0; padding:0; }
+.vote legend { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
+.picks { display:flex; flex-wrap:wrap; gap:8px; }
+.picks label { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--text); background:#111; border:1px solid var(--line); padding:6px 10px; cursor:pointer; }
+.picks label.on { background:var(--pick); border-color:#5d7a68; }
+.picks label.disabled { opacity:.35; cursor:not-allowed; }
+.vote textarea { width:100%; min-height:56px; resize:vertical; background:#111; color:var(--text); border:1px solid var(--line); padding:8px; font:inherit; }
+.summary { margin:8px 24px 40px; padding:16px 18px; background:var(--panel); border:1px solid var(--line); }
+.summary h2 { margin:0 0 8px; font-size:16px; }
+.summary pre { white-space:pre-wrap; font-size:13px; color:var(--muted); background:#111; padding:12px; overflow:auto; }
+.summary .actions { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+button { background:var(--brand); color:#fff; border:0; padding:8px 14px; font:inherit; cursor:pointer; }
+button.ghost { background:transparent; color:var(--gold); border:1px solid var(--line); }
+button:disabled { opacity:.55; cursor:not-allowed; }
+.reviewer { max-width:280px; background:#111; color:var(--text); border:1px solid var(--line); padding:8px; font:inherit; margin-top:8px; }
+.status { font-size:13px; color:var(--muted); margin:8px 0 0; min-height:1.3em; }
+.status.ok { color:#9bb89a; }
+.status.err { color:#d4a0a0; }
+@media (max-width: 980px) {
+  .models, .row { grid-template-columns: 110px repeat(4, minmax(220px, 68vw)); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  header, .vote, .summary { padding-left: 16px; padding-right: 16px; }
+  .vote { margin-left: 16px; margin-right: 16px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>HM Roofing iOS concepts</h1>
+  <p class="sub">Four versions of the same field-sales app. Columns are unlabeled on purpose. On each row, pick a winner and tick anything you liked. Empty cells cannot win that row. A sentence in the note is enough. When you are done, hit Send at the bottom.</p>
+  <div>
+    <input class="reviewer" id="reviewer" type="text" placeholder="Your name or initials">
+  </div>
+</header>
+<div class="models"><div></div><div>Model A<strong></strong></div><div>Model B<strong></strong></div><div>Model C<strong></strong></div><div>Model D<strong></strong></div></div>
+<section class="row"><div class="stage">Open<span>What they see first</span></div><div class="cell"><figure><img src="media/kimi/01-today.png" alt=""><figcaption>today</figcaption></figure></div><div class="cell"><figure><img src="media/grok/01-shift.png" alt=""><figcaption>shift</figcaption></figure></div><div class="cell"><figure><img src="media/gemini/01-home.png" alt=""><figcaption>home</figcaption></figure></div><div class="cell"><figure><img src="media/sol/simulator-today.png" alt=""><figcaption>today</figcaption></figure></div></section><div class="vote" data-cat="open" data-title="Open">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-open" value="A"> A</label><label class=""><input type="radio" name="win-open" value="B"> B</label><label class=""><input type="radio" name="win-open" value="C"> C</label><label class=""><input type="radio" name="win-open" value="D"> D</label><label><input type="radio" name="win-open" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class=""><input type="checkbox" value="C"> C</label><label class=""><input type="checkbox" value="D"> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Lead<span>New or assigned</span></div><div class="cell"><figure><img src="media/kimi/02-newlead.png" alt=""></figure><figure><img src="media/kimi/04-job-newlead.png" alt=""></figure></div><div class="cell"><figure><img src="media/grok/11-lead.png" alt=""></figure><figure><img src="media/grok/15-new-lead.png" alt=""></figure></div><div class="cell empty">Nothing shown</div><div class="cell empty">Nothing shown</div></section><div class="vote" data-cat="lead" data-title="Lead">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-lead" value="A"> A</label><label class=""><input type="radio" name="win-lead" value="B"> B</label><label class="disabled"><input type="radio" name="win-lead" value="C" disabled> C</label><label class="disabled"><input type="radio" name="win-lead" value="D" disabled> D</label><label><input type="radio" name="win-lead" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class="disabled"><input type="checkbox" value="C" disabled> C</label><label class="disabled"><input type="checkbox" value="D" disabled> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Add a lead<span>Where the button lives</span></div><div class="cell"><figure><img src="media/lead-flow/kimi/01-entry-today.png" alt=""><figcaption>Today · New lead</figcaption></figure><figure><img src="media/lead-flow/kimi/02-entry-jobs.png" alt=""><figcaption>Jobs · + Lead</figcaption></figure></div><div class="cell"><figure><img src="media/lead-flow/grok/01-entry-shift.png" alt=""><figcaption>Shift · + New lead</figcaption></figure></div><div class="cell empty">Nothing shown</div><div class="cell"><figure><img src="media/lead-flow/sol/01-entry-today.png" alt=""><figcaption>Field Kit · New lead</figcaption></figure></div></section><div class="vote" data-cat="add-lead-button" data-title="Add a lead">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label><input type="radio" name="win-add-lead-button" value="A"> A</label><label><input type="radio" name="win-add-lead-button" value="B"> B</label><label class="disabled"><input type="radio" name="win-add-lead-button" value="C" disabled> C</label><label><input type="radio" name="win-add-lead-button" value="D"> D</label><label><input type="radio" name="win-add-lead-button" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label><input type="checkbox" value="A"> A</label><label><input type="checkbox" value="B"> B</label><label class="disabled"><input type="checkbox" value="C" disabled> C</label><label><input type="checkbox" value="D"> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Add a lead flow<span>Entering customer info</span></div><div class="cell"><figure><img src="media/lead-flow/kimi/03-form-filled.png" alt=""><figcaption>One screen · GPS address, name, source, create</figcaption></figure></div><div class="cell"><figure><img src="media/lead-flow/grok/02-form.png" alt=""><figcaption>One screen · GPS address, source, name, save</figcaption></figure></div><div class="cell empty">Nothing shown</div><div class="cell"><figure><img src="media/lead-flow/sol/05-work-no-form.png" alt=""><figcaption>No form. Tap sends you to Work with a toast.</figcaption></figure></div></section><div class="vote" data-cat="add-lead-flow" data-title="Add a lead flow">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label><input type="radio" name="win-add-lead-flow" value="A"> A</label><label><input type="radio" name="win-add-lead-flow" value="B"> B</label><label class="disabled"><input type="radio" name="win-add-lead-flow" value="C" disabled> C</label><label class="disabled"><input type="radio" name="win-add-lead-flow" value="D" disabled> D</label><label><input type="radio" name="win-add-lead-flow" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label><input type="checkbox" value="A"> A</label><label><input type="checkbox" value="B"> B</label><label class="disabled"><input type="checkbox" value="C" disabled> C</label><label class="disabled"><input type="checkbox" value="D" disabled> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Job / visit<span>On the property</span></div><div class="cell"><figure><img src="media/kimi/03-jobs.png" alt=""></figure><figure><img src="media/kimi/05-job-insurance.png" alt=""></figure><figure><img src="media/kimi/06-job-retail.png" alt=""></figure></div><div class="cell"><figure><img src="media/grok/02-visit-hayes.png" alt=""></figure><figure><img src="media/grok/07-visit-delgado.png" alt=""></figure></div><div class="cell"><figure><img src="media/gemini/02-job-1.png" alt=""></figure></div><div class="cell"><figure><img src="media/sol/simulator-work.png" alt=""></figure><figure><img src="media/sol/simulator-job.png" alt=""></figure></div></section><div class="vote" data-cat="job" data-title="Job / visit">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-job" value="A"> A</label><label class=""><input type="radio" name="win-job" value="B"> B</label><label class=""><input type="radio" name="win-job" value="C"> C</label><label class=""><input type="radio" name="win-job" value="D"> D</label><label><input type="radio" name="win-job" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class=""><input type="checkbox" value="C"> C</label><label class=""><input type="checkbox" value="D"> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Inspect / photos<span>Roof and capture</span></div><div class="cell"><figure><img src="media/kimi/07-inspect.png" alt=""></figure><figure><img src="media/kimi/08-capture.png" alt=""></figure></div><div class="cell"><figure><img src="media/grok/05-inspect.png" alt=""></figure><figure><img src="media/grok/06-capture.png" alt=""></figure></div><div class="cell empty">Nothing shown</div><div class="cell"><figure><img src="media/sol/simulator-capture.png" alt=""></figure></div></section><div class="vote" data-cat="inspect" data-title="Inspect / photos">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-inspect" value="A"> A</label><label class=""><input type="radio" name="win-inspect" value="B"> B</label><label class="disabled"><input type="radio" name="win-inspect" value="C" disabled> C</label><label class=""><input type="radio" name="win-inspect" value="D"> D</label><label><input type="radio" name="win-inspect" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class="disabled"><input type="checkbox" value="C" disabled> C</label><label class=""><input type="checkbox" value="D"> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Instant Proposal<span>Build and present</span></div><div class="cell"><figure><img src="media/kimi/09-proposal.png" alt=""></figure><figure><img src="media/kimi/10-proposal-property.png" alt=""></figure><figure><img src="media/kimi/11-proposal-roof.png" alt=""></figure><figure><img src="media/kimi/12-proposal-estimate.png" alt=""></figure><figure><img src="media/kimi/13-proposal-financing.png" alt=""></figure><figure><img src="media/kimi/14-present.png" alt=""></figure></div><div class="cell"><figure><img src="media/grok/03-proposal.png" alt=""></figure><figure><img src="media/grok/04-present.png" alt=""></figure></div><div class="cell"><figure><img src="media/gemini/05-proposal.png" alt=""></figure><figure><img src="media/gemini/06-proposal-property.png" alt=""></figure><figure><img src="media/gemini/07-proposal-estimate.png" alt=""></figure><figure><img src="media/gemini/08-proposal-finance.png" alt=""></figure></div><div class="cell"><figure><img src="media/sol/simulator-proposal.png" alt=""></figure><figure><img src="media/sol/simulator-proposal-packages.png" alt=""></figure><figure><img src="media/sol/simulator-homeowner.png" alt=""></figure></div></section><div class="vote" data-cat="proposal" data-title="Instant Proposal">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-proposal" value="A"> A</label><label class=""><input type="radio" name="win-proposal" value="B"> B</label><label class=""><input type="radio" name="win-proposal" value="C"> C</label><label class=""><input type="radio" name="win-proposal" value="D"> D</label><label><input type="radio" name="win-proposal" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class=""><input type="checkbox" value="C"> C</label><label class=""><input type="checkbox" value="D"> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Insurance<span>Claim work</span></div><div class="cell"><figure><img src="media/kimi/05-job-insurance.png" alt=""></figure></div><div class="cell"><figure><img src="media/grok/08-claim.png" alt=""></figure></div><div class="cell empty">Nothing shown</div><div class="cell"><figure><img src="media/sol/simulator-claim.png" alt=""></figure></div></section><div class="vote" data-cat="insurance" data-title="Insurance">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-insurance" value="A"> A</label><label class=""><input type="radio" name="win-insurance" value="B"> B</label><label class="disabled"><input type="radio" name="win-insurance" value="C" disabled> C</label><label class=""><input type="radio" name="win-insurance" value="D"> D</label><label><input type="radio" name="win-insurance" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class="disabled"><input type="checkbox" value="C" disabled> C</label><label class=""><input type="checkbox" value="D"> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Sign / check<span>Close the visit</span></div><div class="cell"><figure><img src="media/kimi/15-sign.png" alt=""></figure></div><div class="cell"><figure><img src="media/grok/09-sign.png" alt=""></figure><figure><img src="media/grok/10-check.png" alt=""></figure></div><div class="cell empty">Nothing shown</div><div class="cell empty">Nothing shown</div></section><div class="vote" data-cat="sign" data-title="Sign / check">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-sign" value="A"> A</label><label class=""><input type="radio" name="win-sign" value="B"> B</label><label class="disabled"><input type="radio" name="win-sign" value="C" disabled> C</label><label class="disabled"><input type="radio" name="win-sign" value="D" disabled> D</label><label><input type="radio" name="win-sign" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class="disabled"><input type="checkbox" value="C" disabled> C</label><label class="disabled"><input type="checkbox" value="D" disabled> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><section class="row"><div class="stage">Other<span>Find, money, offline, handoff</span></div><div class="cell"><figure><img src="media/kimi/16-numbers.png" alt=""></figure></div><div class="cell"><figure><img src="media/grok/12-find.png" alt=""></figure><figure><img src="media/grok/13-commissions.png" alt=""></figure><figure><img src="media/grok/14-profile.png" alt=""></figure><figure><img src="media/grok/16-handoff.png" alt=""></figure></div><div class="cell empty">Nothing shown</div><div class="cell empty">Nothing shown</div></section><div class="vote" data-cat="other" data-title="Other">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-other" value="A"> A</label><label class=""><input type="radio" name="win-other" value="B"> B</label><label class="disabled"><input type="radio" name="win-other" value="C" disabled> C</label><label class="disabled"><input type="radio" name="win-other" value="D" disabled> D</label><label><input type="radio" name="win-other" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class="disabled"><input type="checkbox" value="C" disabled> C</label><label class="disabled"><input type="checkbox" value="D" disabled> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div><div class="vote" data-cat="overall" data-title="Overall">
+  <div class="vote-top">
+    <fieldset>
+      <legend>Winner</legend>
+      <div class="picks"><label class=""><input type="radio" name="win-overall" value="A"> A</label><label class=""><input type="radio" name="win-overall" value="B"> B</label><label class=""><input type="radio" name="win-overall" value="C"> C</label><label class=""><input type="radio" name="win-overall" value="D"> D</label><label><input type="radio" name="win-overall" value=""> None</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Liked (any)</legend>
+      <div class="picks"><label class=""><input type="checkbox" value="A"> A</label><label class=""><input type="checkbox" value="B"> B</label><label class=""><input type="checkbox" value="C"> C</label><label class=""><input type="checkbox" value="D"> D</label></div>
+    </fieldset>
+  </div>
+  <textarea placeholder="Why? Optional — one or two sentences is enough."></textarea>
+</div>
+<div class="summary">
+  <h2>Send your picks</h2>
+  <p class="sub">This goes to Riley. Your name above is included. Picks also stay in this browser if you come back.</p>
+  <div class="actions">
+    <button type="button" id="send-votes">Send</button>
+    <button type="button" class="ghost" id="copy-votes">Copy instead</button>
+  </div>
+  <p class="status" id="send-status"></p>
+  <pre id="vote-summary"></pre>
+</div>
+<script>
+window.HM_VOTE_KEY = 'hm-ios-votes-blind';
+window.HM_BOARD_LABEL = 'blind screens';
+window.HM_MODELS = [{id:'A',label:'Model A',short:'A'}, {id:'B',label:'Model B',short:'B'}, {id:'C',label:'Model C',short:'C'}, {id:'D',label:'Model D',short:'D'}];
+</script>
+<script>
+
+(function () {
+  const KEY = window.HM_VOTE_KEY;
+  const MODELS = window.HM_MODELS;
+  const CATS = Array.from(document.querySelectorAll("[data-cat]"));
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
+    catch (e) { return {}; }
+  }
+  function save(data) { localStorage.setItem(KEY, JSON.stringify(data)); }
+
+  function state() {
+    const data = { reviewer: (document.getElementById("reviewer") || {}).value || "" };
+    CATS.forEach((box) => {
+      const id = box.dataset.cat;
+      const win = box.querySelector('input[type=radio]:checked');
+      const liked = Array.from(box.querySelectorAll('input[type=checkbox]:checked')).map((el) => el.value);
+      const note = (box.querySelector("textarea") || {}).value || "";
+      data[id] = { winner: win ? win.value : "", liked, note };
+    });
+    return data;
+  }
+
+  function apply(data) {
+    if (data.reviewer && document.getElementById("reviewer")) {
+      document.getElementById("reviewer").value = data.reviewer;
+    }
+    CATS.forEach((box) => {
+      const row = data[box.dataset.cat] || {};
+      box.querySelectorAll('input[type=radio]').forEach((el) => {
+        el.checked = el.value === row.winner;
+      });
+      box.querySelectorAll('input[type=checkbox]').forEach((el) => {
+        el.checked = (row.liked || []).includes(el.value);
+      });
+      const ta = box.querySelector("textarea");
+      if (ta) ta.value = row.note || "";
+    });
+    paint();
+  }
+
+  function paint() {
+    CATS.forEach((box) => {
+      const section = box.previousElementSibling;
+      if (!section || !section.classList.contains("row")) return;
+      const cells = section.querySelectorAll(".cell");
+      const win = box.querySelector('input[type=radio]:checked');
+      const liked = new Set(Array.from(box.querySelectorAll('input[type=checkbox]:checked')).map((el) => el.value));
+      box.querySelectorAll(".picks label").forEach((lab) => {
+        const input = lab.querySelector("input");
+        lab.classList.toggle("on", !!(input && input.checked));
+      });
+      cells.forEach((cell, i) => {
+        const id = MODELS[i] && MODELS[i].id;
+        cell.classList.toggle("winner", !!(win && win.value === id));
+        cell.classList.toggle("liked", liked.has(id));
+      });
+    });
+    renderSummary();
+  }
+
+  function renderSummary() {
+    const data = state();
+    const lines = [];
+    if (data.reviewer) lines.push("Reviewer: " + data.reviewer);
+    lines.push("Board: " + (window.HM_BOARD_LABEL || "screens"));
+    lines.push("");
+    CATS.forEach((box) => {
+      const id = box.dataset.cat;
+      const title = box.dataset.title || id;
+      const row = data[id] || {};
+      const win = row.winner ? labelOf(row.winner) : "(none)";
+      const liked = (row.liked || []).map(labelOf).join(", ") || "(none)";
+      lines.push(title);
+      lines.push("  Winner: " + win);
+      lines.push("  Liked: " + liked);
+      if (row.note) lines.push("  Why: " + row.note);
+      lines.push("");
+    });
+    const pre = document.getElementById("vote-summary");
+    if (pre) pre.textContent = lines.join("\n").trim();
+  }
+
+  function labelOf(id) {
+    const m = MODELS.find((x) => x.id === id);
+    return m ? m.label : id;
+  }
+
+  function persist() {
+    save(state());
+    paint();
+  }
+
+  document.addEventListener("change", persist);
+  document.addEventListener("input", (e) => {
+    if (e.target && (e.target.id === "reviewer" || e.target.tagName === "TEXTAREA")) persist();
+  });
+
+  const statusEl = document.getElementById("send-status");
+  function setStatus(msg, kind) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.className = "status" + (kind ? " " + kind : "");
+  }
+
+  const copyBtn = document.getElementById("copy-votes");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", async () => {
+      const text = document.getElementById("vote-summary").textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Copied";
+        setTimeout(() => { copyBtn.textContent = "Copy instead"; }, 1500);
+      } catch (e) {
+        copyBtn.textContent = "Select the text below";
+      }
+    });
+  }
+
+  const sendBtn = document.getElementById("send-votes");
+  if (sendBtn) {
+    sendBtn.addEventListener("click", async () => {
+      const summary = (document.getElementById("vote-summary") || {}).textContent || "";
+      const data = state();
+      if (!data.reviewer) {
+        setStatus("Add your name or initials at the top first.", "err");
+        document.getElementById("reviewer").focus();
+        return;
+      }
+      sendBtn.disabled = true;
+      setStatus("Sending…");
+      try {
+        const res = await fetch("https://formsubmit.co/ajax/Riley@hmroofs.com", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({
+            name: data.reviewer,
+            _subject: "HM iOS review — " + data.reviewer,
+            message: summary,
+            votes: JSON.stringify(data)
+          })
+        });
+        if (!res.ok) throw new Error("send failed");
+        setStatus("Sent. Thank you — you can close this tab.", "ok");
+        sendBtn.textContent = "Sent";
+      } catch (e) {
+        sendBtn.disabled = false;
+        setStatus("Could not send. Use Copy instead and text Riley the results.", "err");
+      }
+    });
+  }
+
+  apply(load());
+})();
+
+</script>
+</body>
+</html>
